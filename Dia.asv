@@ -1,0 +1,37 @@
+%Read data
+clc
+clear all
+close all
+warning off
+data= readtable('Dia.csv');
+
+%feature Scaling
+data.Pregnancies=(data.Pregnancies-min(data.Pregnancies))/max(data.Pregnancies)-min(data.Pregnancies);
+data.Glucose=(data.Glucose-min(data.Glucose))/max(data.Glucose)-min(data.Glucose);
+data.BloodPressure=( data.BloodPressure-min(data.BloodPressure))/max(data.BloodPressure)-min(data.BloodPressure);
+data.SkinThickness=(data.SkinThickness-min(data.SkinThickness))/max(data.SkinThickness)-min(data.SkinThickness);
+data.Insulin=(data.Insulin-min(data.Insulin))/max(data.Insulin)-min(data.Insulin);
+data.BMI=(data.BMI-min(data.BMI))/max(data.BMI)-min(data.BMI);
+data.DiabetesPedigreeFunction=(data.DiabetesPedigreeFunction-min(data.DiabetesPedigreeFunction))/max(data.DiabetesPedigreeFunction)-min(data.DiabetesPedigreeFunction);
+data.Age=(data.Age-min(data.Age))/max(data.Age)-min(data.Age);
+
+%Split data into train and test data
+cv = cvpartition(size(data,1),'HoldOut',0.3);
+idx = cv.test;
+
+%Store the training and testing data seperately
+dataTrain = data(~idx,:);
+dataTest = data(idx,:);
+
+%Handling 0 values in some features of training set that cant have 0 value
+g=(dataTrain.Glucose==0);
+k=(dataTrain.BloodPressure==0);
+l=(dataTrain.SkinThickness==0);
+m=(dataTrain.Insulin==0);
+n=(dataTrain.BMI==0);
+o=(dataTrain.DiabetesPedigreeFunction==0);
+p=(dataTrain.Age==0);
+impractical=[sum(g) sum(k) sum(l) sum(m) sum(n) sum(o) sum(p)];
+
+
+
